@@ -51,6 +51,11 @@ __EOF__
 
 AddNetworkMap()
 {
+  if [ ! -s "$TempFolder/networklist.txt" ]; then
+    echo "ERROR: $TempFolder/networklist.txt is empty - no real network entries to add. Refusing to remove the dummy entry and ship an empty NetworkMap. Aborting." >&2
+    exit 1
+  fi
+
   while IFS= read -r line; do
     id="${line%% *}"
     name="${line#* }"
@@ -133,6 +138,11 @@ __EOF__
 
 AddStorageMap()
 {
+  if [ ! -s "$TempFolder/storagelist.txt" ]; then
+    echo "ERROR: $TempFolder/storagelist.txt is empty - no real storage entries to add. Refusing to remove the dummy entry and ship an empty StorageMap. Aborting." >&2
+    exit 1
+  fi
+
   while IFS= read -r line; do
     id="${line%% *}"
     name="${line#* }"

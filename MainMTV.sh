@@ -47,8 +47,11 @@ main() {
           echo "using Scenario name: ${scenario_name} ,testcase: ${testcase} ,case: ${mtv_case} using ${VMsPrefix} ,total-vms: ${total_vms} against ${provider_url} started at: `time_stemp`"
           echo ""
 
-          ./SetupProvider.sh
-          ./RunMigration.sh
+          if ./SetupProvider.sh; then
+            ./RunMigration.sh
+          else
+            echo "ERROR: SetupProvider.sh failed for scenario: ${scenario_name} - skipping RunMigration.sh" >&2
+          fi
 
         } 2>&1 | tee "$MAIN_LOG_FILE"
 

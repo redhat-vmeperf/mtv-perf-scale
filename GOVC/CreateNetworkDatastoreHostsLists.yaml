@@ -30,6 +30,8 @@
 
     - name: Build the mygovc image from Dockerfile
       ansible.builtin.shell: podman build -t localhost/mygovc:latest -f Dockerfile.govc .
+      args:
+        chdir: "{{ playbook_dir }}"
 
     - name: Pause for 3 seconds
       ansible.builtin.pause:
@@ -46,7 +48,6 @@
         name: govc_runner
         image: localhost/mygovc:latest
         state: started
-        pull: never
         env:
           GOVC_URL: "{{ GOVC_URL }}"
           GOVC_USERNAME: "{{ GOVC_USERNAME }}"

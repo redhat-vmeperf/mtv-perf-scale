@@ -24,7 +24,6 @@
         name: govc_metrics
         image: localhost/mygovc_metrics:latest
         state: started
-        pull: never
         env:
           GOVC_URL: "{{ GOVC_URL }}"
           GOVC_USERNAME: "{{ GOVC_USERNAME }}"

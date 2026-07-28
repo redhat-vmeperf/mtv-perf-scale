@@ -34,7 +34,6 @@
         name: govc_runner
         image: localhost/mygovc:latest
         state: started
-        pull: never
         env:
           GOVC_URL: "{{ GOVC_URL }}"
           GOVC_USERNAME: "{{ GOVC_USERNAME }}"

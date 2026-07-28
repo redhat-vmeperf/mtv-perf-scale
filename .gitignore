@@ -11,3 +11,4 @@ vendor/*
 .claude/settings.local.json
 .claude/plans/*
 .local/*
+ISSUE_DRAFT.md

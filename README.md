@@ -139,6 +139,11 @@ To do
    ```
 5. **sudo privileges** (the scripts check for running as root).
 6. Access to a **vSphere SDK endpoint** and credentials (URL, username, password) so the migration provider can be created.
+7. **`containers.podman` Ansible collection** used by the `GOVC/*.yaml` and `METRICS/CreateImageContainer.yaml` playbooks for the `podman_container`/`podman_image` modules:
+
+   ```bash
+   ansible-galaxy collection install containers.podman
+   ```
 
 ---
 

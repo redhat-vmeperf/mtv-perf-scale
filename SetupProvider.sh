@@ -94,6 +94,10 @@ CreateNetworkDatastoreHostsLists()
   vSphere_url="${vSphere_url%%/*}"
 
   ansible-playbook `pwd`/GOVC/CreateNetworkDatastoreHostsLists.yaml -e vSphere_url="$vSphere_url" -e vm_names_file="$TempFolder/vm_names_file.txt" -e outPath="$TempFolder" -v
+  if [ $? -ne 0 ]; then
+    echo "ERROR: CreateNetworkDatastoreHostsLists.yaml playbook failed - networklist.txt/storagelist.txt were not populated. Aborting." >&2
+    exit 1
+  fi
 }
 
 ##################################################
