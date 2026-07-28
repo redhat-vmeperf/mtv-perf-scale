@@ -48,7 +48,9 @@ main() {
           echo ""
 
           if ./SetupProvider.sh; then
-            ./RunMigration.sh
+            if ! ./RunMigration.sh; then
+              echo "ERROR: RunMigration.sh failed for scenario: ${scenario_name}" >&2
+            fi
           else
             echo "ERROR: SetupProvider.sh failed for scenario: ${scenario_name} - skipping RunMigration.sh" >&2
           fi
