@@ -3795,6 +3795,61 @@ EOF
     cat >> "$index_file" <<EOF
 </table>
 <style>${cold_style}</style>
+<script>
+function sortByTCNumber() {
+    var table = document.querySelector("table");
+    if (!table) return;
+    var tbody = table.querySelector("tbody") || table;
+    var allRows = Array.prototype.slice.call(tbody.querySelectorAll("tr"));
+    var headerRow = null;
+    var dataRows = [];
+    allRows.forEach(function(row) {
+        if (row.querySelector("th")) { headerRow = row; }
+        else { dataRows.push(row); }
+    });
+    dataRows.sort(function(a, b) {
+        var nameA = a.cells[0] ? a.cells[0].textContent.trim() : "";
+        var nameB = b.cells[0] ? b.cells[0].textContent.trim() : "";
+        var matchA = nameA.match(/tc(\\d+)-(\\d+)/);
+        var matchB = nameB.match(/tc(\\d+)-(\\d+)/);
+        var numA = matchA ? [parseInt(matchA[1], 10), parseInt(matchA[2], 10)] : [999, 999];
+        var numB = matchB ? [parseInt(matchB[1], 10), parseInt(matchB[2], 10)] : [999, 999];
+        return numA[0] - numB[0] || numA[1] - numB[1];
+    });
+    var uniqueTCs = {};
+    var totalCycles = 0;
+    var verifiedRows = [];
+    var nonVerifiedRows = [];
+    dataRows.forEach(function(row) {
+        var name = row.cells[0] ? row.cells[0].textContent.trim() : "";
+        if (name.indexOf("-nv-") !== -1 || name.match(/nv-tc/i)) {
+            nonVerifiedRows.push(row);
+            return;
+        }
+        var match = name.match(/tc(\\d+)-(\\d+)/);
+        if (match) {
+            var tcKey = match[1] + "." + match[2];
+            var cyclesCell = row.cells[2];
+            var cycles = 1;
+            if (cyclesCell) { var c = parseInt(cyclesCell.textContent.trim()); if (!isNaN(c)) cycles = c; }
+            if (!uniqueTCs[tcKey]) { uniqueTCs[tcKey] = true; }
+            totalCycles += cycles;
+        }
+        verifiedRows.push(row);
+    });
+    while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+    if (headerRow) tbody.appendChild(headerRow);
+    verifiedRows.concat(nonVerifiedRows).forEach(function(row) {
+        tbody.appendChild(row);
+    });
+    var tcCount = Object.keys(uniqueTCs).length;
+    var h2 = document.querySelector("h2");
+    if (h2 && tcCount > 0) {
+        h2.innerHTML = h2.textContent + ' <span style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;padding:4px 14px;border-radius:12px;font-size:0.65em;vertical-align:middle;margin-left:10px;">Regression TCs: ' + tcCount + ' | Total Cycles: ' + totalCycles + '</span>';
+    }
+}
+window.addEventListener("DOMContentLoaded", sortByTCNumber);
+</script>
 </body>
 </html>
 EOF
